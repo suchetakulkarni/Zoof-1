@@ -1,3 +1,5 @@
+const User = require('../models/user')
+const Categories = require('../models/category')
 module.exports = function(app, passport) {
 
     // =====================================
@@ -5,7 +7,18 @@ module.exports = function(app, passport) {
     // =====================================
     app.get('/home', function(req, res) {
         let user = req.user
-        res.render('index.ejs',{ user:user}); // load the index.ejs file
+        if(user){
+            User.findById(user._id,(err, newUser)=>{
+                let lengths = Object.keys(newUser.order).length
+                Categories.find().exec((err, category)=>{
+                    res.render('index.ejs',{ user:user, lengths:lengths, category: category})
+                })
+                
+        })
+    }
+    else{
+        res.render('index.ejs')
+        }
     });
 
     // =====================================

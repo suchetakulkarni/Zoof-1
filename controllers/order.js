@@ -9,39 +9,48 @@ exports.getOrderById = (req, res, next) => {
       return res.status(400).json('Error')
     }
    else {
-    console.log(purchase.order[1].products)
+      let amount =0
+      purchase.order.forEach(function(total){
+        amount+=total.products[0].productPrice
+      })
+      if(user){
+          User.findById(user._id,(err, newUser)=>{
+              let lengths = Object.keys(newUser.order).length
+              res.render('cart', {purchase:purchase.order, amount:amount, lengths:lengths} )
+      })
+  }
+      
     }
   })
 };
 
-
-
 exports.pushOrderInUser = (req, res, next) => {
   let user = req.user
   let product = req.params.productId
-  Product.findById(product).exec((err, products)=>{
+  Product.findById(product).exec((err, productss)=>{
     if(err){
       return res.json(400).json('Error')
     }
     let purchases = []
     purchases.push({
       productId: product,
-      productName: products.name,
-      productPrice: products.price
+      productName: productss.name,
+      productPrice: productss.price
   })
-    User.findOneAndUpdate(
-      { _id: user._id },
-      { $push: {order: [{products: {purchases}}] }},
-      (err, purchases) => {
-        if (err) {
-          return res.status(400).json({error:'Unable to save'})
-          }
-        res.redirect('/order/cart')
-      }
-    );
+    User.findById(user._id,(err, userOrder)=>{
+      User.findOneAndUpdate(
+        { _id: user._id },
+        {$push: {order: {products: purchases}} },
+        (err, purchase) => {
+          if (err) {
+            return res.status(400).json({error:'Unable to save'})
+            }
+            res.redirect('/order/cart')
+        }
+      )
+    })
+    ;
   })
-
-  
 }
 
 

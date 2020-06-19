@@ -1,6 +1,6 @@
 const Product = require("../models/products");
 const { getUser , getUserById } = require('./user')
-
+const User = require('../models/user')
 
 exports.getProductById = (req, res, next, id) => {
     Product.findById(id)
@@ -107,7 +107,13 @@ exports.getProductById = (req, res, next, id) => {
     let categoryId = req.params.categoryId
     Product.find({"category":categoryId}, (err, products) => {
       if(!err){
-        res.render('products.ejs', {products: products, userId:userId})
+        if(userId){
+            User.findById(userId._id,(err, newUser)=>{
+                let lengths = Object.keys(newUser.order).length
+                res.render('products.ejs', {products: products, userId:userId, lengths:lengths})
+        })
+    }
+        
       }
     })
   };

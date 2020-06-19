@@ -1,5 +1,5 @@
 const Category = require("../models/category");
-const Products = require('../models/products')
+const User = require('../models/user')
 
 
 exports.displayCategories = (req, res) => {
@@ -10,7 +10,14 @@ exports.displayCategories = (req, res) => {
         });
       }
       else {
-            res.render('categories', {categories: categories })
+        let user = req.user
+        if(user){
+            User.findById(user._id,(err, newUser)=>{
+                let lengths = Object.keys(newUser.order).length
+                res.render('categories', {categories: categories, lengths:lengths })
+        })
+    }
+            
   }
   })
   }
