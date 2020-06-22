@@ -8,16 +8,19 @@ module.exports = function(app, passport) {
     app.get('/home', function(req, res) {
         let user = req.user
         if(user){
+            Categories.find().exec((err, category)=>{
             User.findById(user._id,(err, newUser)=>{
                 let lengths = Object.keys(newUser.order).length
-                Categories.find().exec((err, category)=>{
-                    res.render('index.ejs',{ user:user, lengths:lengths, category: category})
+                    res.render('index.ejs',{ user:user, lengths:lengths, categories: category})
                 })
                 
         })
     }
     else{
-        res.render('index.ejs')
+        Categories.find().exec((err, category)=>{
+            res.render('index.ejs', {categories: category})
+        })
+        
         }
     });
 

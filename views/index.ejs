@@ -62,14 +62,14 @@
                     </div>
                 </div>
                 <div class="row">
-                <% category.forEach((categories)=>{ %>
+                <% categories.forEach((category)=>{ %>
                     <div class="col-xl-4 col-lg-6">
                         <div class="single-category mb-30">
                             <div class="category-img">
                                 <img src="/assets/img/categori/cat1.jpg" alt="">
                                 <div class="category-caption">
-                                    <h2><%=categories.name %></h2>
-                                    <span class="best"><a href="/product/<%= categories._id %>/products">Best New Deals</a></span>
+                                    <h2><%=category.name %></h2>
+                                    <span class="best"><a href="/product/<%= category._id %>/products">Best New Deals</a></span>
                                     <span class="collection">New Collection</span>
                                 </div>
                             </div>
